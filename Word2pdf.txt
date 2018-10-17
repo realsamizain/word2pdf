@@ -1,0 +1,46 @@
+Option Explicit
+ 
+Sub MyCustomSaveAs()
+Dim strPath As String
+Dim oDoc As Word.Document
+Dim strName As String
+Set oDoc = ActiveDocument
+strPath = GetDocPath
+strName = oDoc.Name
+    If SaveFileAsPDF(oDoc) = True Then
+      MsgBox "A PDF document is created at the same location where you save File."
+    End If
+  
+
+lbl_Exit:
+Exit Sub
+End Sub
+ 
+Function SaveFileAsPDF(ByRef oDocPassed As Word.Document) As Boolean
+Dim strFileName As String
+SaveFileAsPDF = False
+strFileName = Left(oDocPassed.FullName, Len(oDocPassed.FullName) - 4) & "pdf"
+  oDocPassed.ExportAsFixedFormat OutputFileName:=strFileName, _
+  ExportFormat:=wdExportFormatPDF, OpenAfterExport:=False, OptimizeFor:= _
+  wdExportOptimizeForPrint, _
+  Item:=wdExportDocumentContent, IncludeDocProps:=True, KeepIRM:=True, _
+  CreateBookmarks:=wdExportCreateNoBookmarks, DocStructureTags:=True, _
+  BitmapMissingFonts:=True, UseISO19005_1:=True
+SaveFileAsPDF = True
+lbl_Exit:
+Exit Function
+End Function
+ 
+Function GetDocPath() As String
+Dim fDlg As Dialog
+Set fDlg = Dialogs(wdDialogToolsOptionsFileLocations)
+With fDlg
+  .Path = "DOC-PATH"
+  .Update
+  GetDocPath = .Setting
+End With
+lbl_Exit:
+Exit Function
+End Function
+
+
